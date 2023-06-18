@@ -3,6 +3,13 @@ import pyscipopt as scip
 INPUTS_PER_ROW = 15
 TIME_LIMIT = float(5*60)
 
+SCIP_PARAM_DICT = {
+  'VarBranch': {
+    'MAX_INFEASIBILITY': 'mostinf',
+    'STRONG_BRANCHING': 'fullstrong',
+  },
+}
+
 def number_of_inputs(x):
   from math import ceil
   return ceil(x/INPUTS_PER_ROW)
@@ -42,6 +49,15 @@ def main():
   M, N, C, A = read_data()
   X, model = build_model(M, N, C, A)
 
+  params = {
+    "limits/time": TIME_LIMIT,
+    f"branching/{SCIP_PARAM_DICT['VarBranch']['MAX_INFEASIBILITY']}/priority": 10001
+  }
+
+  for k in params:
+    model.setParam(k, params[k])
+
+  model.setPresolve(False)
   model.optimize()
 
   nodes = [f'{i+1}' for i in range(M) if bool(model.getVal(X[i]))]
@@ -50,7 +66,9 @@ def main():
   print(f'Status: {model.getStatus()}')
   print(f'Numero de nós selecionados: {len(nodes)}')
   print(f'Nós selecionados: {", ".join(nodes)}')
-  print(f'Valor da função objetivo: {model.objVal}')
+  print(f'Limitante Primal: {model.getPrimalbound()}')
+  print(f'Limitante Dual: {model.getDualbound()}')
+  print(f'GAP: {model.getGap():.3f}%')
   print('-'*80)
 
 
