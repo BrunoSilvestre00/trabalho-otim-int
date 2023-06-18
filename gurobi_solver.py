@@ -49,7 +49,7 @@ def read_data():
 def build_model(M, N, C, A):
   model = gp.Model('Problema de Cobertura - Trabalho Etapa 2')
 
-  # variáveis de decição
+  # variáveis de decisão
   X = model.addVars(N, vtype=gp.GRB.BINARY, name='x')
 
   # função objetivo
