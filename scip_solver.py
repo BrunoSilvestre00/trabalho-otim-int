@@ -50,12 +50,24 @@ def main():
   X, model = build_model(M, N, C, A)
 
   params = {
-    "limits/time": TIME_LIMIT,
-    f"branching/{SCIP_PARAM_DICT['VarBranch']['MAX_INFEASIBILITY']}/priority": 10001
+    "limits/time": TIME_LIMIT, # Definir limite de tempo
+    "separating/maxrounds": 0, # Desativar cortes
+    # f"branching/{SCIP_PARAM_DICT['VarBranch']['MAX_INFEASIBILITY']}/priority": 10001 # Seleção de variavel
   }
 
   for k in params:
     model.setParam(k, params[k])
+
+  cuts = {
+    'separating/clique/priority': 5000,
+    'separating/flowcover/priority': 5000,
+    'separating/knapsackcover/priority': 5000,
+    'constraints/cumulative/usecovercuts': True,
+    'constraints/knapsack/usegubs': True,
+  }
+
+  for k in cuts:
+    model.setParam(k, cuts[k])
 
   model.setPresolve(False)
   model.optimize()

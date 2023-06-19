@@ -70,7 +70,7 @@ def main():
   params = {
     gp.GRB.Param.TimeLimit: TIME_LIMIT, # Definir limite de tempo
     gp.GRB.Param.Cuts: 0, # Desativar cortes
-    # gp.GRB.Param.Presolve: 0, # Desativar pre processamento
+    gp.GRB.Param.Presolve: 0, # Desativar pre processamento
     # gp.GRB.Param.VarBranch: GUROBI_PARAM_DICT['VarBranch']['STRONG_BRANCHING'], # Seleção de variavel
   }
 
